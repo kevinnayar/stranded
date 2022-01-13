@@ -1,0 +1,36 @@
+{
+  "name": "stranded",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest --watchAll",
+    "build": "tsc"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "testMatch": [
+      "**/*.test.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "jest"
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^27.4.0",
+    "eslint": "^8.6.0",
+    "husky": "^7.0.4",
+    "jest": "^27.4.7",
+    "ts-jest": "^27.1.2",
+    "typescript": "^4.5.4"
+  },
+  "author": "Kevin Nayar"
+}
