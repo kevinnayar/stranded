@@ -4,7 +4,7 @@ import {
   AminoAcid,
   AminoAcidDef,
   AminoAcidName,
-  AminoAcidLetter,
+  AminoAcidAbbr,
   AminoAcidProp,
 } from './types';
 
@@ -72,26 +72,26 @@ export function getAminoAcidFromCodon(codon: string, type: 'dna' | 'rna'): null 
   return aminoAcid === 'STOP' ? null : aminoAcid;
 }
 
-export function getAminoAcidDef(abbr: AminoAcid): AminoAcidDef {
-  const name: AminoAcidName = aminoAcidToNameLookup[abbr];
+export function getAminoAcidDef(acid: AminoAcid): AminoAcidDef {
+  const name: AminoAcidName = aminoAcidToNameLookup[acid];
   if (!name) {
-    throw new Error(`Could not find "name" for amino acid: "${abbr}"`);
+    throw new Error(`Could not find "name" for amino acid: "${acid}"`);
   }
 
-  const letter: AminoAcidLetter = aminoAcidToLetterLookup[abbr];
-  if (!letter) {
-    throw new Error(`Could not find "letter" for amino acid: "${abbr}"`);
+  const abbr: AminoAcidAbbr = aminoAcidToLetterLookup[acid];
+  if (!abbr) {
+    throw new Error(`Could not find "abbr" for amino acid: "${name}"`);
   }
 
-  const property: null | AminoAcidProp = aminoAcidToPropertyLookup[abbr];
+  const property: null | AminoAcidProp = aminoAcidToPropertyLookup[acid];
   if (typeof property !== 'string' && property !== null) {
-    throw new Error(`Could not find "property" for amino acid: "${abbr}"`);
+    throw new Error(`Could not find "property" for amino acid: "${name}"`);
   }
 
   return {
+    acid,
     abbr,
     name,
-    letter,
     property,
   };
 }

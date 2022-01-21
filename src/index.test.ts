@@ -9,6 +9,9 @@ import {
   getLongestOrf,
 } from './index';
 
+import sequenceCovidBNT162b2 from './data/sequenceCovidBNT162b2';
+import sequenceCovidMRNA1273 from './data/sequenceCovidMRNA1273';
+
 describe('index', () => {
   test('getBaseName', () => {
     expect(getBaseName('A')).toEqual('Adenine');
@@ -27,15 +30,15 @@ describe('index', () => {
   });
 
   test('getAminoAcidFromCodon', () => {
-    expect(getAminoAcidFromCodon('ATG', 'dna')).toEqual('Met');
-    expect(getAminoAcidFromCodon('GGG', 'dna')).toEqual('Gly');
+    expect(getAminoAcidFromCodon('ATG', 'dna')).toEqual('M');
+    expect(getAminoAcidFromCodon('GGG', 'dna')).toEqual('G');
     expect(getAminoAcidFromCodon('TGA', 'dna')).toEqual(null);
     expect(() => getAminoAcidFromCodon('UGA', 'dna')).toThrow(
       'Cannot find an amino acid for invalid dna codon: "UGA"',
     );
 
-    expect(getAminoAcidFromCodon('AUG', 'rna')).toEqual('Met');
-    expect(getAminoAcidFromCodon('GGG', 'rna')).toEqual('Gly');
+    expect(getAminoAcidFromCodon('AUG', 'rna')).toEqual('M');
+    expect(getAminoAcidFromCodon('GGG', 'rna')).toEqual('G');
     expect(getAminoAcidFromCodon('UGA', 'rna')).toEqual(null);
     expect(() => getAminoAcidFromCodon('TGA', 'rna')).toThrow(
       'Cannot find an amino acid for invalid rna codon: "TGA"',
@@ -43,21 +46,21 @@ describe('index', () => {
   });
 
   test('getAminoAcidDef', () => {
-    expect(getAminoAcidDef('Met')).toEqual({
+    expect(getAminoAcidDef('M')).toEqual({
+      acid: 'M',
       abbr: 'Met',
-      letter: 'M',
       name: 'Methionine',
       property: 'Nonpolar',
     });
     expect(getAminoAcidDef('STOP')).toEqual({
+      acid: 'STOP',
       abbr: 'STOP',
-      letter: 'STOP',
       name: 'STOP',
       property: null,
     });
-    expect(getAminoAcidDef('Ile')).toEqual({
+    expect(getAminoAcidDef('I')).toEqual({
+      acid: 'I',
       abbr: 'Ile',
-      letter: 'I',
       name: 'Isoleucine',
       property: 'Nonpolar',
     });
@@ -69,22 +72,22 @@ describe('index', () => {
     );
 
     expect(translateSequenceToPolypeptide('UUUUUCUUAUUGUCUUCCUCAUCGUAU')).toEqual({
-      polypeptide: ['Phe', 'Phe', 'Leu', 'Leu', 'Ser', 'Ser', 'Ser', 'Ser', 'Tyr'],
+      polypeptide: ['F', 'F', 'L', 'L', 'S', 'S', 'S', 'S', 'Y'],
       remainingSequence: '',
     });
 
     expect(translateSequenceToPolypeptide('UUUUUCUUAUUGUCUUCCUCAUCGUAUUAA')).toEqual({
-      polypeptide: ['Phe', 'Phe', 'Leu', 'Leu', 'Ser', 'Ser', 'Ser', 'Ser', 'Tyr'],
+      polypeptide: ['F', 'F', 'L', 'L', 'S', 'S', 'S', 'S', 'Y'],
       remainingSequence: 'UAA',
     });
 
     expect(translateSequenceToPolypeptide('UUUUUCUUAUUGUCUUCCUCAUCGUAUUAAUGA')).toEqual({
-      polypeptide: ['Phe', 'Phe', 'Leu', 'Leu', 'Ser', 'Ser', 'Ser', 'Ser', 'Tyr'],
+      polypeptide: ['F', 'F', 'L', 'L', 'S', 'S', 'S', 'S', 'Y'],
       remainingSequence: 'UAAUGA',
     });
 
     expect(translateSequenceToPolypeptide('UUUUUCUUAUUGUCUUCCUCAUCGUAUUAAUGAUUU')).toEqual({
-      polypeptide: ['Phe', 'Phe', 'Leu', 'Leu', 'Ser', 'Ser', 'Ser', 'Ser', 'Tyr'],
+      polypeptide: ['F', 'F', 'L', 'L', 'S', 'S', 'S', 'S', 'Y'],
       remainingSequence: 'UAAUGAUUU',
     });
   });
@@ -106,26 +109,26 @@ describe('index', () => {
     ])).toEqual('ATGACACGATATGAGATATGCATAGAAAGCGAATATAGA');
   });
 
-  test('all', () => {
+  test('Composed Functions', () => {
     const dnaSequence = 'ATGACACGATATGAGATATGCATAGAAAGCGAATATAGATAG';
     const dnaSequenceSm = 'ATGAGATATGCA';
     const dnaSequenceMd = 'ATGCATAGAAAGCGAATA';
     const dnaSequenceLg = 'ATGACACGATATGAGATATGCATAGAAAGCGAATATAGA';
     const rnaSequenceLg = 'UACUGUGCUAUACUCUAUACGUAUCUUUCGCUUAUAUCU';
     const polypeptide = [
-      'Tyr',
-      'Cys',
-      'Ala',
-      'Ile',
-      'Leu',
-      'Tyr',
-      'Thr',
-      'Tyr',
-      'Leu',
-      'Ser',
-      'Leu',
-      'Ile',
-      'Ser',
+      'Y',
+      'C',
+      'A',
+      'I',
+      'L',
+      'Y',
+      'T',
+      'Y',
+      'L',
+      'S',
+      'L',
+      'I',
+      'S',
     ];
 
     expect(findOrfs(dnaSequence, 'dna')).toEqual([dnaSequenceLg, dnaSequenceSm, dnaSequenceMd]);
@@ -142,5 +145,31 @@ describe('index', () => {
         ),
       ).polypeptide,
     ).toEqual(polypeptide);
+  });
+
+  test('sequenceCovidBNT162b2 -> parse', () => {
+    const orfs = findOrfs(sequenceCovidBNT162b2, 'dna');
+    const orfMaybe: string | undefined = getLongestOrf(orfs);
+
+    if (!orfMaybe) throw new Error('orf must be defined');
+    const orf: string = orfMaybe;
+
+    const translation = translateSequenceToPolypeptide(orf, [], 'dna');
+    expect(translation.polypeptide.join('')).toEqual(
+      'MFVFLVLLPLVSSQCVNLTTRTQLPPAYTNSFTRGVYYPDKVFRSSVLHSTQDLFLPFFSNVTWFHAIHVSGTNGTKRFDNPVLPFNDGVYFASTEKSNIIRGWIFGTTLDSKTQSLLIVNNATNVVIKVCEFQFCNDPFLGVYYHKNNKSWMESEFRVYSSANNCTFEYVSQPFLMDLEGKQGNFKNLREFVFKNIDGYFKIYSKHTPINLVRDLPQGFSALEPLVDLPIGINITRFQTLLALHRSYLTPGDSSSGWTAGAAAYYVGYLQPRTFLLKYNENGTITDAVDCALDPLSETKCTLKSFTVEKGIYQTSNFRVQPTESIVRFPNITNLCPFGEVFNATRFASVYAWNRKRISNCVADYSVLYNSASFSTFKCYGVSPTKLNDLCFTNVYADSFVIRGDEVRQIAPGQTGKIADYNYKLPDDFTGCVIAWNSNNLDSKVGGNYNYLYRLFRKSNLKPFERDISTEIYQAGSTPCNGVEGFNCYFPLQSYGFQPTNGVGYQPYRVVVLSFELLHAPATVCGPKKSTNLVKNKCVNFNFNGLTGTGVLTESNKKFLPFQQFGRDIADTTDAVRDPQTLEILDITPCSFGGVSVITPGTNTSNQVAVLYQDVNCTEVPVAIHADQLTPTWRVYSTGSNVFQTRAGCLIGAEHVNNSYECDIPIGAGICASYQTQTNSPRRARSVASQSIIAYTMSLGAENSVAYSNNSIAIPTNFTISVTTEILPVSMTKTSVDCTMYICGDSTECSNLLLQYGSFCTQLNRALTGIAVEQDKNTQEVFAQVKQIYKTPPIKDFGGFNFSQILPDPSKPSKRSFIEDLLFNKVTLADAGFIKQYGDCLGDIAARDLICAQKFNGLTVLPPLLTDEMIAQYTSALLAGTITSGWTFGAGAALQIPFAMQMAYRFNGIGVTQNVLYENQKLIANQFNSAIGKIQDSLSSTASALGKLQDVVNQNAQALNTLVKQLSSNFGAISSVLNDILSRLDPPEAEVQIDRLITGRLQSLQTYVTQQLIRAAEIRASANLAATKMSECVLGQSKRVDFCGKGYHLMSFPQSAPHGVVFLHVTYVPAQEKNFTTAPAICHDGKAHFPREGVFVSNGTHWFVTQRNFYEPQIITTDNTFVSGNCDVVIGIVNNTVYDPLQPELDSFKEELDKYFKNHTSPDVDLGDISGINASVVNIQKEIDRLNEVAKNLNESLIDLQELGKYEQYIKWPWYIWLGFIAGLIAIVMVTIMLCCMTSCCSCLKGCCSCGSCCKFDEDDSEPVLKGVKLHYT',
+    );
+  });
+
+  test('sequenceCovidMRNA1273 -> parse', () => {
+    const orfs = findOrfs(sequenceCovidMRNA1273, 'dna');
+    const orfMaybe: string | undefined = getLongestOrf(orfs);
+
+    if (!orfMaybe) throw new Error('orf must be defined');
+    const orf: string = orfMaybe;
+
+    const translation = translateSequenceToPolypeptide(orf, [], 'dna');
+    expect(translation.polypeptide.join('')).toEqual(
+      'MFVFLVLLPLVSSQCVNLTTRTQLPPAYTNSFTRGVYYPDKVFRSSVLHSTQDLFLPFFSNVTWFHAIHVSGTNGTKRFDNPVLPFNDGVYFASTEKSNIIRGWIFGTTLDSKTQSLLIVNNATNVVIKVCEFQFCNDPFLGVYYHKNNKSWMESEFRVYSSANNCTFEYVSQPFLMDLEGKQGNFKNLREFVFKNIDGYFKIYSKHTPINLVRDLPQGFSALEPLVDLPIGINITRFQTLLALHRSYLTPGDSSSGWTAGAAAYYVGYLQPRTFLLKYNENGTITDAVDCALDPLSETKCTLKSFTVEKGIYQTSNFRVQPTESIVRFPNITNLCPFGEVFNATRFASVYAWNRKRISNCVADYSVLYNSASFSTFKCYGVSPTKLNDLCFTNVYADSFVIRGDEVRQIAPGQTGKIADYNYKLPDDFTGCVIAWNSNNLDSKVGGNYNYLYRLFRKSNLKPFERDISTEIYQAGSTPCNGVEGFNCYFPLQSYGFQPTNGVGYQPYRVVVLSFELLHAPATVCGPKKSTNLVKNKCVNFNFNGLTGTGVLTESNKKFLPFQQFGRDIADTTDAVRDPQTLEILDITPCSFGGVSVITPGTNTSNQVAVLYQDVNCTEVPVAIHADQLTPTWRVYSTGSNVFQTRAGCLIGAEHVNNSYECDIPIGAGICASYQTQTNSPRRARSVASQSIIAYTMSLGAENSVAYSNNSIAIPTNFTISVTTEILPVSMTKTSVDCTMYICGDSTECSNLLLQYGSFCTQLNRALTGIAVEQDKNTQEVFAQVKQIYKTPPIKDFGGFNFSQILPDPSKPSKRSFIEDLLFNKVTLADAGFIKQYGDCLGDIAARDLICAQKFNGLTVLPPLLTDEMIAQYTSALLAGTITSGWTFGAGAALQIPFAMQMAYRFNGIGVTQNVLYENQKLIANQFNSAIGKIQDSLSSTASALGKLQDVVNQNAQALNTLVKQLSSNFGAISSVLNDILSRLDPPEAEVQIDRLITGRLQSLQTYVTQQLIRAAEIRASANLAATKMSECVLGQSKRVDFCGKGYHLMSFPQSAPHGVVFLHVTYVPAQEKNFTTAPAICHDGKAHFPREGVFVSNGTHWFVTQRNFYEPQIITTDNTFVSGNCDVVIGIVNNTVYDPLQPELDSFKEELDKYFKNHTSPDVDLGDISGINASVVNIQKEIDRLNEVAKNLNESLIDLQELGKYEQYIKWPWYIWLGFIAGLIAIVMVTIMLCCMTSCCSCLKGCCSCGSCCKFDEDDSEPVLKGVKLHYT',
+    );
   });
 });

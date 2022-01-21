@@ -3,6 +3,29 @@ export type BaseSymbol = 'A' | 'C' | 'G' | 'T' | 'U';
 export type BaseName = 'Adenine' | 'Cytosine' | 'Guanine' | 'Thymine' | 'Uracil';
 
 export type AminoAcid =
+  | 'A'
+  | 'R'
+  | 'N'
+  | 'D'
+  | 'C'
+  | 'E'
+  | 'Q'
+  | 'G'
+  | 'H'
+  | 'I'
+  | 'L'
+  | 'K'
+  | 'M'
+  | 'F'
+  | 'P'
+  | 'S'
+  | 'STOP'
+  | 'T'
+  | 'W'
+  | 'Y'
+  | 'V';
+
+export type AminoAcidAbbr =
   | 'Phe'
   | 'Leu'
   | 'Ser'
@@ -48,35 +71,12 @@ export type AminoAcidName =
   | 'Tyrosine'
   | 'Valine';
 
-export type AminoAcidLetter =
-  | 'A'
-  | 'R'
-  | 'N'
-  | 'D'
-  | 'C'
-  | 'E'
-  | 'Q'
-  | 'G'
-  | 'H'
-  | 'I'
-  | 'L'
-  | 'K'
-  | 'M'
-  | 'F'
-  | 'P'
-  | 'S'
-  | 'STOP'
-  | 'T'
-  | 'W'
-  | 'Y'
-  | 'V';
-
 export type AminoAcidProp = 'Nonpolar' | 'Polar' | 'Basic' | 'Acidic';
 
 export type AminoAcidDef = {
-  abbr: AminoAcid;
+  acid: AminoAcid;
   name: AminoAcidName;
-  letter: AminoAcidLetter;
+  abbr: AminoAcidAbbr;
   property: null | AminoAcidProp;
 };
 
