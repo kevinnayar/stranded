@@ -1,3 +1,5 @@
 # 🧬 stranded
 
-Some helpful utils for transcription and translation of DNA and RNA
+(WIP)
+
+Some helpful utility functions for transcription and translation of DNA/RNA to amino acid chains and polypeptides.
